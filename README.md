@@ -48,3 +48,6 @@ class TestOrders(TestCase):
         self.assertEqual(args['passwd'], 'gottagofast')
         self.assertEqual(args['charset'], 'utf8')
 ```
+
+### pymysql cursor (context manager)
+
