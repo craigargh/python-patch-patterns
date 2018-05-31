@@ -108,3 +108,7 @@ class TestOrders(TestCase):
 
         execute_mock.assert_called_once_with(expected_sql)
 ```
+
+### pymysql fetchall()
+
+### pymysql execute_many()
