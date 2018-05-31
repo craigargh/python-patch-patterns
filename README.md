@@ -51,7 +51,8 @@ class TestOrders(TestCase):
 
 ### pymysql cursor (context manager)
 
-Code to test:
+Code to test (`orders.py`):
+
 ```python
 import pymysql
 
@@ -110,5 +111,63 @@ class TestOrders(TestCase):
 ```
 
 ### pymysql fetchall()
+
+Code to test (`orders.py`):
+
+```python
+import pymysql
+
+def query_items():
+    connection = pymysql.connect(
+        db='users',
+        host='127.01.54.12',
+        user='admin',
+        passwd='gottagofast',
+        charset='utf8',
+    )
+
+    sql = 'SELECT * FROM orders.items'
+
+    with connection as cursor:
+        cursor.execute(sql)
+
+        items = cursor.fetchall()
+
+    return items
+```
+
+Test:
+
+```python
+from unittest import TestCase
+form unitests.mock import patch
+
+from orders import query_items
+
+
+class TestOrders(TestCase):
+    
+    @patch('orders.pymysql')
+    def test_check_started_returns_result_of_query(self):
+        item_records_stub = [
+            (12, 'a box'),
+            (13, 'jumper'),
+            (14, 'shoes'),
+        ]
+
+        self.mysql_mock \
+            .connect.return_value \
+            .__enter__.return_value \
+            .fetchall.return_value = item_records_stub
+
+        result = query_items()
+
+        self.assertEqual(3, len(result))
+        
+        self.assertEqual((12, 'a box'), result[0])
+        self.assertEqual((13, 'jumper'), result[1])
+        self.assertEqual((14, 'shoes'), result[2])
+```
+
 
 ### pymysql execute_many()
