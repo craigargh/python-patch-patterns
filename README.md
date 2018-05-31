@@ -51,3 +51,60 @@ class TestOrders(TestCase):
 
 ### pymysql cursor (context manager)
 
+Code to test:
+```python
+import pymysql
+
+def insert_item(item_id, description):
+    sql_template = (
+        'INSERT IGNORE INTO orders.items ('
+        'item_id, description'
+        ') VALUES ('
+        '{}, `{}`'
+        ')'
+    )
+
+    sql = sql_template.format(item_id, description)
+
+    connection = pymysql.connect(
+        db='users',
+        host='127.01.54.12',
+        user='admin',
+        passwd='gottagofast',
+        charset='utf8',
+    )
+
+    with connection as cursor:
+        cursor.execute(sql)
+```
+
+Tests:
+
+```python
+from unittest import TestCase
+form unitests.mock import patch
+
+from orders import insert
+
+
+class TestOrders(TestCase):
+    
+    @patch('orders.pymysql')
+    def test_insert_item_executes_sql(self, mysqlmock):
+        insert(12, 'A box')
+
+        execute_mock = mysql_mock \
+            .connect.return_value \
+            .__enter__.return_value \
+            .execute
+
+        expected_sql = (
+            'INSERT IGNORE INTO orders.items ('
+            'item_id, description'
+            ') VALUES ('
+            '12, `A box`'
+            ')'
+        )
+
+        execute_mock.assert_called_once_with(expected_sql)
+```
