@@ -7,6 +7,7 @@ A collection of patterns used for mocking libraries in Python
 ## pymysql
 
 
+### pymysql.connect
 The code to test (`orders.py`)
 
 ```python
