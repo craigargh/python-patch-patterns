@@ -171,3 +171,49 @@ class TestOrders(TestCase):
 
 
 ### pymysql execute_many()
+
+
+## datetime
+
+### datetime.datetime.today()
+
+
+Code to test (`timings.py`):
+
+```python
+import datetime
+
+
+def current_date():
+    today = datetime.datetime.today()
+
+    return today.strftime('%Y-%m-%d')
+```
+
+Test:
+
+```python
+import datetime
+from unittest import TestCase
+from unitests.mock import patch
+
+from timings import current_date
+
+
+class TestTimings(TestCase):
+
+    def setUp():
+        self.datetime_mock = patch('timings.datetime.datetime',
+                                   Mock(wraps=datetime.datetime)).start()
+        
+        self.datetime_mock.today.return_value = datetime.datetime(1924, 6, 16, 6, 32, 8)
+
+        self.addCleanup(patch.stopall)
+
+    def test_current_date_is_returned_as_a_string():
+        result = current_date()
+
+        self.assertEqual('1924-06-16', result)
+```
+
+Alternatively, use the `freezegun` package.
